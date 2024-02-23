@@ -1,4 +1,7 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+require("dotenv").config();
 
 const teacherRouter = require("./Routes/teacherRoute");
 const childRouter = require("./Routes/childRoute");
@@ -6,17 +9,21 @@ const classRouter = require("./Routes/classRoute");
 
 const server = express();
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3030;
 
-server.listen(port, () => {
-  console.log("server is running on port: ", port);
-});
+// connect to database
+mongoose
+  .connect(`${process.env.DB_LINK}/${process.env.DB_NAME}`)
+  .then(() => {
+    server.listen(port, () => {
+      console.log(`server is running on port: ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
-server.use((req, res, next) => {
-  console.log(`Logging:request URL ${req.url}  request Method: ${req.method}`);
-  // throw new Error("dfasd")
-  next();
-});
+server.use(morgan("combined"));
 
 //////////////// parsing requests
 server.use(express.json());
@@ -32,7 +39,7 @@ server.use(childRouter);
 server.use(classRouter);
 
 /////////////// Not found
-server.use((req, res) => {
+server.use((req, res,next) => {
   res.status(404).json({ message: "Not Found" });
 });
 
