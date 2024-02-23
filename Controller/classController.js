@@ -12,12 +12,27 @@ exports.getAllClasses = (req, res, next) => {
 
 exports.getClassById = (req, res, next) => {
   const id = req.params.id;
-  res.status(200).json({ id, message: `Take class with id ${id}` });
+  Class.find({ _id: id })
+    .then((c) => {
+      res.status(200).json({ data: c, message: `Take class with id ${id}` });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.addNewClass = (req, res, next) => {
   const data = req.body;
-  res.status(200).json({ data, message: `add new class` });
+  console.log(data);
+  const newClass = new Class({ _id: 1, supervisor: 1, children: [1, 2] });
+  newClass
+    .save()
+    .then((c) => {
+      res.status(200).json({ data: c, message: `add new class` });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.updateClassData = (req, res, next) => {
