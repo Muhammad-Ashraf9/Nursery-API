@@ -7,6 +7,9 @@ const teacherRouter = require("./Routes/teacherRoute");
 const childRouter = require("./Routes/childRoute");
 const classRouter = require("./Routes/classRoute");
 
+const upload = require("./Middlewares/MulterMW");
+const { addNewTeacher } = require("./Controller/teacherController");
+
 const server = express();
 
 const port = process.env.PORT || 3030;
@@ -28,6 +31,14 @@ server.use(morgan("combined"));
 //////////////// parsing requests
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+//parse image by multer
+
+
+//regiter teacher
+server.post('/teachers',upload.single('image'),addNewTeacher)
+
+//auth MWs
+
 
 /////////////// teachers
 server.use(teacherRouter);

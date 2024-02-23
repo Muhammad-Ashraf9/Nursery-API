@@ -21,7 +21,7 @@ router
 
 router.get("/class/:id", getClassById);
 
-router.get("/class/supervisor/:id", getClassSupervisorInfo);
+router.get("/class/teacher/:id", getClassSupervisorInfo);
 router.get("/class/child/:id", getClassChildrenInfo);
 
 module.exports = router;

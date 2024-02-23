@@ -7,10 +7,6 @@ const {
 
 const router = express.Router();
 
-router
-  .route("/teachers")
-  .get(getAllTeachers)
-  .post(addNewTeacher)
-  .put(updateTeacherData);
+router.route("/teachers").get(getAllTeachers).put(updateTeacherData);
 
 module.exports = router;
