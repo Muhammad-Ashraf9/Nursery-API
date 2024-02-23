@@ -1,5 +1,13 @@
+const Class = require("../Model/classSchema");
+
 exports.getAllClasses = (req, res, next) => {
-  res.status(200).json({ data: [{}, {}], message: "Take all classes" });
+  Class.find()
+    .then((classes) => {
+      res.status(200).json({ data: classes, message: "Take all classes" });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getClassById = (req, res, next) => {

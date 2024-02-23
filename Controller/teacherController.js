@@ -1,5 +1,11 @@
+const Teacher = require("../Model/teacherSchema")
+
 exports.getAllTeachers = (req, res) => {
-  res.status(200).json({ data: [{}, {}], message: "take all teachers" });
+  Teacher.find().then((teachers) => {
+    res.status(200).json({ data: teachers, message: "take all teachers" });
+  }).catch((err) => {
+    next(err)
+  });
 };
 exports.addNewTeacher = (req, res) => {
   const data = req.body;

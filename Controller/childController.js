@@ -1,5 +1,12 @@
+const Child = require("../Model/childSchema");
 exports.getAllChildren = (req, res, next) => {
-  res.status(200).json({ data: [{}, {}], message: "Take all children" });
+  Child.find()
+    .then((children) => {
+      res.status(200).json({ data: children, message: "Take all children" });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 exports.getChildById = (req, res, next) => {

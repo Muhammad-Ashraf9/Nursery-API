@@ -39,7 +39,7 @@ server.use(childRouter);
 server.use(classRouter);
 
 /////////////// Not found
-server.use((req, res,next) => {
+server.use((req, res, next) => {
   res.status(404).json({ message: "Not Found" });
 });
 
