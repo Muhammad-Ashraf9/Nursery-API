@@ -1,58 +1,80 @@
 const Class = require("../Model/classSchema");
 
-exports.getAllClasses = (req, res, next) => {
-  Class.find()
-    .then((classes) => {
-      res.status(200).json({ data: classes, message: "Take all classes" });
-    })
-    .catch((err) => {
-      next(err);
-    });
+exports.getAllClasses = async (req, res, next) => {
+  try {
+    const classes = await Class.find();
+    res.status(200).json({ data: classes, message: "Take all classes" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.getClassById = (req, res, next) => {
+exports.getClassById = async (req, res, next) => {
   const id = req.params.id;
-  Class.find({ _id: id })
-    .then((c) => {
-      res.status(200).json({ data: c, message: `Take class with id ${id}` });
-    })
-    .catch((err) => {
-      next(err);
-    });
+  try {
+    const classData = await Class.findById(id);
+    res
+      .status(200)
+      .json({ data: classData, message: `Take class with id ${id}` });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.addNewClass = (req, res, next) => {
-  const data = req.body;
-  console.log(data);
-  const newClass = new Class({ _id: 1, supervisor: 1, children: [1, 2] });
-  newClass
-    .save()
-    .then((c) => {
-      res.status(200).json({ data: c, message: `add new class` });
-    })
-    .catch((err) => {
-      next(err);
-    });
+exports.addNewClass = async (req, res, next) => {
+  const createdClass = new Class(req.body);
+  try {
+    const newClass = await createdClass.save();
+    res
+      .status(201)
+      .json({ data: newClass, message: "Class added successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.updateClassData = (req, res, next) => {
+exports.updateClassData = async (req, res, next) => {
   const data = req.body;
-  res.status(200).json({ data, message: `update class with id ${data.id}` });
+  try {
+    const classData = await Class.findByIdAndUpdate(data.id, data, { new: true });
+    res
+      .status(201)
+      .json({ data: classData, message: `update class with id ${data.id}` });
+  }
+  catch (error) {
+    next(error);
+  }
 };
-exports.deleteClass = (req, res, next) => {
+exports.deleteClass = async (req, res, next) => {
   const id = req.body.id;
-  res.status(200).json({ id, message: `delete class with id ${id}` });
+
+  try {
+    const classData = await Class.findByIdAndDelete(id);
+    res.status(200).json({ classData, message: "Class deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.getClassChildrenInfo = (req, res, next) => {
+exports.getClassChildrenInfo = async(req, res, next) => {
   const id = req.params.id;
-  res
-    .status(200)
-    .json({ id, message: `Take class children info with id ${id}` });
+  try {
+    const classData = await Class.findById(id).populate("children");
+    res
+      .status(200)
+      .json({ data: classData.children, message: `Take children of class with id ${id}` });
+  } catch (error) {
+    next(error);
+  }
 };
-exports.getClassSupervisorInfo = (req, res, next) => {
+exports.getClassSupervisorInfo = async(req, res, next) => {
   const id = req.params.id;
-  res
-    .status(200)
-    .json({ id, message: `Take class supervisor info with id ${id}` });
+  try {
+    const classData = await Class.findById(id).populate("supervisor");
+    res
+      .status(200)
+      .json({ data: classData.supervisor, message: `Take supervisor of class with id ${id}` });
+  } catch (error) {
+    next(error);
+  }
 };
