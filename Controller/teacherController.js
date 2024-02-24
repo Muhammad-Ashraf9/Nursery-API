@@ -17,7 +17,9 @@ exports.getAllTeachers = async (req, res, next) => {
   }
 };
 exports.addNewTeacher = async (req, res, next) => {
-  const imagePath = req.file.path;
+  console.log(req.file);
+  console.log(req.body);
+  const imagePath = req.file?.path;
   const { fullname, email, password } = req.body;
   try {
     const hashedPass = await bcrypt.hash(password, 10);

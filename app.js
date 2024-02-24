@@ -9,6 +9,10 @@ const classRouter = require("./Routes/classRoute");
 
 const upload = require("./Middlewares/MulterMW");
 const { addNewTeacher } = require("./Controller/teacherController");
+const {
+  teacherDataValidation,
+} = require("./Middlewares/validation/teacherValidations");
+const validator = require("./Middlewares/validation/validator");
 
 const server = express();
 
@@ -34,8 +38,8 @@ server.use(express.urlencoded({ extended: true }));
 //parse image by multer
 server.use(upload.single("image"));
 
-//regiter teacher
-server.post("/teachers", addNewTeacher);
+//register teacher
+server.post("/teachers",  teacherDataValidation, validator, addNewTeacher);
 
 //auth MWs
 
