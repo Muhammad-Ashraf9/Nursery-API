@@ -36,12 +36,13 @@ exports.addNewClass = async (req, res, next) => {
 exports.updateClassData = async (req, res, next) => {
   const data = req.body;
   try {
-    const classData = await Class.findByIdAndUpdate(data.id, data, { new: true });
+    const classData = await Class.findByIdAndUpdate(data.id, data, {
+      new: true,
+    });
     res
       .status(201)
       .json({ data: classData, message: `update class with id ${data.id}` });
-  }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
 };
@@ -56,24 +57,42 @@ exports.deleteClass = async (req, res, next) => {
   }
 };
 
-exports.getClassChildrenInfo = async(req, res, next) => {
+exports.getClassChildrenInfo = async (req, res, next) => {
   const id = req.params.id;
   try {
     const classData = await Class.findById(id).populate("children");
-    res
-      .status(200)
-      .json({ data: classData.children, message: `Take children of class with id ${id}` });
+    if (!classData) {
+      const error = new Error("No class with this id");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({
+      data: classData.children,
+      message: `Take children of class with id ${id}`,
+    });
   } catch (error) {
     next(error);
   }
 };
-exports.getClassSupervisorInfo = async(req, res, next) => {
+exports.getClassSupervisorInfo = async (req, res, next) => {
   const id = req.params.id;
   try {
     const classData = await Class.findById(id).populate("supervisor");
-    res
-      .status(200)
-      .json({ data: classData.supervisor, message: `Take supervisor of class with id ${id}` });
+    if (!classData) {
+      const error = new Error("No class with this id");
+      error.statusCode = 404;
+      throw error;
+    }
+    if(!classData.supervisor){
+      const error = new Error("No supervisor for this class");
+      error.statusCode = 404;
+      throw error;
+    }
+    
+    res.status(200).json({
+      data: classData.supervisor,
+      message: `Take supervisor of class with id ${id}`,
+    });
   } catch (error) {
     next(error);
   }

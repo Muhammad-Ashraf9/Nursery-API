@@ -1,6 +1,7 @@
 const express = require("express");
+const validator = require("../Middlewares/validation/validator");
+
 const {
-  getAllClassren,
   addNewClass,
   updateClassData,
   deleteClass,
@@ -9,19 +10,39 @@ const {
   getClassSupervisorInfo,
   getClassChildrenInfo,
 } = require("../Controller/classController");
+const {
+  classDataValidation,
+  classBodyIdValidation,
+  classParamIdValidation,
+} = require("../Middlewares/validation/classValidations");
 
 const router = express.Router();
 
 router
   .route("/class")
   .get(getAllClasses)
-  .post(addNewClass)
-  .put(updateClassData)
-  .delete(deleteClass);
+  .post(classDataValidation(), validator, addNewClass)
+  .put(
+    classBodyIdValidation(),
+    classDataValidation(),
+    validator,
+    updateClassData
+  )
+  .delete(classBodyIdValidation(), validator, deleteClass);
 
-router.get("/class/:id", getClassById);
+router.get("/class/:id", classParamIdValidation(), validator, getClassById);
 
-router.get("/class/teacher/:id", getClassSupervisorInfo);
-router.get("/class/child/:id", getClassChildrenInfo);
+router.get(
+  "/class/teacher/:id",
+  classParamIdValidation(),
+  validator,
+  getClassSupervisorInfo
+);
+router.get(
+  "/class/child/:id",
+  classParamIdValidation(),
+  validator,
+  getClassChildrenInfo
+);
 
 module.exports = router;
