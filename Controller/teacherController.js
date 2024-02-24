@@ -83,6 +83,11 @@ exports.deleteTeacherById = async (req, res, next) => {
   const { id } = req.body;
   try {
     const deletedTeacher = await Teacher.findByIdAndDelete(id);
+    if (!deletedTeacher) {
+      const error = new Error("Teacher not found");
+      error.statusCode = 404;
+      throw error;
+    }
     //delete image from uploads folder
     removeFile(getImageFullPath(deletedTeacher.image.slice(7)));
     res
