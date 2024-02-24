@@ -1,6 +1,46 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     AddressSchema:
+ *       type: object
+ *       properties:
+ *         city:
+ *           type: string
+ *         street:
+ *           type: string
+ *         building:
+ *           type: string
+ *     ChildSchema:
+ *       type: object
+ *       properties:
+ *         _id:
+ *           type: number
+ *         fullname:
+ *           type: string
+ *         level:
+ *           type: string
+ *           enum:
+ *             - PreKG
+ *             - KG1
+ *             - KG2
+ *           required: true
+ *         age:
+ *           type: number
+ *           required: true
+ *           minimum: 2
+ *           maximum: 6
+ *         image:
+ *           type: string
+ *           required: true
+ *         address:
+ *          $ref: '#/components/schemas/AddressSchema'
+ *      required: true
+ *
+ */
 const AddressSchema = mongoose.Schema(
   {
     city: String,

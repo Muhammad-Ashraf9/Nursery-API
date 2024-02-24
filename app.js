@@ -11,11 +11,7 @@ const authRouter = require("./Routes/AuthenticationRoutes");
 const upload = require("./Middlewares/MulterMW");
 const authMW = require("./Middlewares/AuthenticationMW");
 
-const { addNewTeacher } = require("./Controller/teacherController");
-const {
-  teacherDataValidation,
-} = require("./Middlewares/validation/teacherValidations");
-const validator = require("./Middlewares/validation/validator");
+const swaggerDocs = require("./swagger");
 
 const server = express();
 
@@ -33,7 +29,11 @@ mongoose
     console.log(err);
   });
 
+  // serve swagger documentation
+swaggerDocs(server, port);
+
 server.use(morgan("combined"));
+
 
 //////////////// parsing requests
 server.use(express.json());
@@ -41,13 +41,14 @@ server.use(express.urlencoded({ extended: true }));
 //parse image by multer
 server.use(upload.single("image"));
 
-//register teacher / Auth Routes
-server.post("/teachers", teacherDataValidation(), validator, addNewTeacher);
-
+//register teacher / login Routes
 server.use(authRouter);
 
-//auth MWs
-server.use(authMW);
+//authenticate all requests
+// server.use(authMW);
+
+// serve images statically after authentication
+server.use(express.static("images"));
 
 /////////////// teachers
 server.use(teacherRouter);
