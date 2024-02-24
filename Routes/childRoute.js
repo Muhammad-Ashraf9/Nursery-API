@@ -14,6 +14,7 @@ const {
   childUpdateValidation,
   childBodyIdValidation,
 } = require("../Middlewares/validation/childValidation");
+const { isAdmin } = require("../Middlewares/AuthorizationMW");
 
 const router = express.Router();
 
@@ -21,9 +22,9 @@ router
   .route("/child")
   .get(getAllChildren)
   // .post(childDataValidation(), validator.imageValidation, validator, addNewChild)
-  .post(childDataValidation(), validator, addNewChild)
-  .put(childUpdateValidation(), validator, updateChildData)
-  .delete(childBodyIdValidation(), validator, deleteChild);
+  .post(isAdmin, childDataValidation(), validator, addNewChild)
+  .put(isAdmin, childUpdateValidation(), validator, updateChildData)
+  .delete(isAdmin, childBodyIdValidation(), validator, deleteChild);
 
 router.get("/child/:id", childParamIdValidation(), validator, getChildById);
 

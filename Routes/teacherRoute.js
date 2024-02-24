@@ -19,8 +19,8 @@ const router = express.Router();
 router
   .route("/teachers")
   .get(getAllTeachers)
-  .put(teacherUpdateValidation(), validator, updateTeacherData)
-  .delete(teacherBodyIdValidation(), validator, deleteTeacherById);
+  .put(isAdmin, teacherUpdateValidation(), validator, updateTeacherData)
+  .delete(isAdmin, teacherBodyIdValidation(), validator, deleteTeacherById);
 
 router.get("/teachers/supervisors", getAllClassSupervisors);
 

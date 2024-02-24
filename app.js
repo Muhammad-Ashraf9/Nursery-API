@@ -6,8 +6,11 @@ require("dotenv").config();
 const teacherRouter = require("./Routes/teacherRoute");
 const childRouter = require("./Routes/childRoute");
 const classRouter = require("./Routes/classRoute");
+const authRouter = require("./Routes/AuthenticationRoutes");
 
 const upload = require("./Middlewares/MulterMW");
+const authMW = require("./Middlewares/AuthenticationMW");
+
 const { addNewTeacher } = require("./Controller/teacherController");
 const {
   teacherDataValidation,
@@ -38,10 +41,13 @@ server.use(express.urlencoded({ extended: true }));
 //parse image by multer
 server.use(upload.single("image"));
 
-//register teacher
-server.post("/teachers",  teacherDataValidation(), validator, addNewTeacher);
+//register teacher / Auth Routes
+server.post("/teachers", teacherDataValidation(), validator, addNewTeacher);
+
+server.use(authRouter);
 
 //auth MWs
+server.use(authMW);
 
 /////////////// teachers
 server.use(teacherRouter);
