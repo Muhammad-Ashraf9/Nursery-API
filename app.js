@@ -32,13 +32,12 @@ server.use(morgan("combined"));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 //parse image by multer
-
+server.use(upload.single("image"));
 
 //regiter teacher
-server.post('/teachers',upload.single('image'),addNewTeacher)
+server.post("/teachers", addNewTeacher);
 
 //auth MWs
-
 
 /////////////// teachers
 server.use(teacherRouter);
