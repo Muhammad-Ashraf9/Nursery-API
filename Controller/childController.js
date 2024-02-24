@@ -9,17 +9,32 @@ exports.getAllChildren = (req, res, next) => {
     });
 };
 
-exports.getChildById = (req, res, next) => {
+exports.getChildById = async (req, res, next) => {
   const id = req.params.id;
-  res.status(200).json({ id, message: `Take child with id ${id}` });
+  try {
+    const child = await Child.findById(id);
+    res.status(200).json({ data: child, message: `Take child with id ${id}` });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.addNewChild = (req, res, next) => {
-  const data = req.body;
-  res.status(201).json({ data, message: `add new child` });
+exports.addNewChild = async (req, res, next) => {
+  const { fullname, city, street, building, level } = req.body;
+  const imagePath = req.file?.path;
+  const address = { city, street, building };
+  const child = new Child({ level, fullname, image: imagePath, address });
+  try {
+    const newChild = await child.save();
+    res
+      .status(201)
+      .json({ data: newChild, message: "Child added successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 
-exports.updateChildData = (req, res, next) => {
+exports.updateChildData = async(req, res, next) => {
   const data = req.body;
   res.status(201).json({ data, message: `update child with id ${data.id}` });
 };
