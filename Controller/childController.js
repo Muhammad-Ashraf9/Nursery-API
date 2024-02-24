@@ -1,4 +1,5 @@
 const Child = require("../Model/childSchema");
+const { removeFile, getImageFullPath } = require("../helper");
 exports.getAllChildren = (req, res, next) => {
   Child.find()
     .then((children) => {
@@ -23,7 +24,7 @@ exports.addNewChild = async (req, res, next) => {
   const { fullname, city, street, building, level, age } = req.body;
   const imagePath = req.file?.path;
   const address = { city, street, building };
-  const child = new Child({ level, fullname, image: imagePath, age ,address});
+  const child = new Child({ level, fullname, image: imagePath, age, address });
   try {
     const newChild = await child.save();
     res
@@ -35,8 +36,36 @@ exports.addNewChild = async (req, res, next) => {
 };
 
 exports.updateChildData = async (req, res, next) => {
-  const data = req.body;
-  res.status(201).json({ data, message: `update child with id ${data.id}` });
+  const { id, fullname, city, street, building, level, age } = req.body;
+  const address = { city, street, building };
+  const newImagePath = req.file?.path;
+  let { image } = req.child;
+  console.log("image", image);
+  console.log("newImagePath", newImagePath);
+  if ( newImagePath) {
+    removeFile(getImageFullPath(image.slice(7)));
+    image = newImagePath;
+  }
+
+  try {
+    const updatedChild = await Child.findByIdAndUpdate(
+      id,
+      {
+        level,
+        fullname,
+        image,
+        age,
+        address,
+      },
+      { new: true }
+    );
+
+    res
+      .status(201)
+      .json({ data: updatedChild, message: "Child updated successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 exports.deleteChild = (req, res, next) => {
   const id = req.body.id;

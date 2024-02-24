@@ -52,13 +52,11 @@ exports.updateTeacherData = async (req, res, next) => {
   const { id, fullname, email, password } = req.body;
   const newImagePath = req.file?.path;
   const oldImagePath = req.teacher.image;
-  console.log("newImagePath :>> ", newImagePath);
-  console.log("oldImagePath :>> ", oldImagePath);
-  const hashedPass = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
+const hashedPass = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
 
   let image;
   try {
-    if (oldImagePath !== newImagePath) {
+    if (newImagePath) {
       removeFile(getImageFullPath(oldImagePath.slice(7))); //to remove images from image path
       image = newImagePath;
     } else {
