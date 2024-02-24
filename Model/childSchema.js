@@ -23,8 +23,9 @@ const ChildSchema = new mongoose.Schema(
       enum: ["PreKG", "KG1", "KG2"],
       required: true,
     },
+    age: { type: Number, required: true, min: 2, max: 6 },
     image: { type: String, required: true },
-    adddress: AddressSchema,
+    address: { type: AddressSchema, required: true },
   },
   { _id: false }
 );

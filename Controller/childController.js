@@ -20,10 +20,10 @@ exports.getChildById = async (req, res, next) => {
 };
 
 exports.addNewChild = async (req, res, next) => {
-  const { fullname, city, street, building, level } = req.body;
+  const { fullname, city, street, building, level, age } = req.body;
   const imagePath = req.file?.path;
   const address = { city, street, building };
-  const child = new Child({ level, fullname, image: imagePath, address });
+  const child = new Child({ level, fullname, image: imagePath, age ,address});
   try {
     const newChild = await child.save();
     res
@@ -34,7 +34,7 @@ exports.addNewChild = async (req, res, next) => {
   }
 };
 
-exports.updateChildData = async(req, res, next) => {
+exports.updateChildData = async (req, res, next) => {
   const data = req.body;
   res.status(201).json({ data, message: `update child with id ${data.id}` });
 };

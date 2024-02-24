@@ -5,6 +5,7 @@ const path = require("path");
 
 module.exports = (req, res, next) => {
   let result = validationResult(req);
+  console.log('result :>> ', result);
   if (result.errors.length >= 1) {
     if (req.file) {
       removeFile(getImageFullPath(req.file.filename));
