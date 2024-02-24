@@ -42,7 +42,7 @@ exports.updateChildData = async (req, res, next) => {
   let { image } = req.child;
   console.log("image", image);
   console.log("newImagePath", newImagePath);
-  if ( newImagePath) {
+  if (newImagePath) {
     removeFile(getImageFullPath(image.slice(7)));
     image = newImagePath;
   }
@@ -67,7 +67,15 @@ exports.updateChildData = async (req, res, next) => {
     next(error);
   }
 };
-exports.deleteChild = (req, res, next) => {
-  const id = req.body.id;
-  res.status(201).json({ id, message: `delete child with id ${id}` });
+exports.deleteChild = async (req, res, next) => {
+  const id = req.child._id;
+  try {
+    await Child.deleteOne({ _id: id }, { new: true });
+    removeFile(getImageFullPath(req.child.image.slice(7)));
+    res
+      .status(201)
+      .json({ deleteChild: req.child, message: `delete child with id ${id}` });
+  } catch (error) {
+    next(error);
+  }
 };

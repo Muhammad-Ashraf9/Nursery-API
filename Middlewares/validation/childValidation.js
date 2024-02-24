@@ -6,6 +6,18 @@ exports.childParamIdValidation = () => [
   param("id").isInt().withMessage("Not a valid Id"),
 ];
 
+exports.childBodyIdValidation = () => [
+  body("id")
+    .isInt()
+    .withMessage("Not a valid Id")
+    .custom(async (id, { req }) => {
+      const child = await Child.findById(id);
+      if (!child) throw Error("Child not found");
+      req.child = child;
+      return true;
+    }),
+];
+
 exports.childDataValidation = () => [
   body("fullname")
     .trim()

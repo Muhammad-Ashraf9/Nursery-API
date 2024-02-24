@@ -12,6 +12,7 @@ const {
   childParamIdValidation,
   childDataValidation,
   childUpdateValidation,
+  childBodyIdValidation,
 } = require("../Middlewares/validation/childValidation");
 
 const router = express.Router();
@@ -22,7 +23,7 @@ router
   // .post(childDataValidation(), validator.imageValidation, validator, addNewChild)
   .post(childDataValidation(), validator, addNewChild)
   .put(childUpdateValidation(), validator, updateChildData)
-  .delete(deleteChild);
+  .delete(childBodyIdValidation(), validator, deleteChild);
 
 router.get("/child/:id", childParamIdValidation(), validator, getChildById);
 
