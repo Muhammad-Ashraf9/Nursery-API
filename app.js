@@ -55,5 +55,5 @@ server.use((req, res, next) => {
 
 //////////////// Error handler
 server.use((error, req, res, next) => {
-  res.status(500).json({ message: error + "" });
+  res.status(error.statusCode || 500).json({ message: error + "" });
 });

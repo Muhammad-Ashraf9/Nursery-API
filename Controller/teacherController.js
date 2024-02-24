@@ -79,6 +79,11 @@ exports.getTeacherById = async (req, res, next) => {
   const id = req.params.id;
   try {
     const teacher = await Teacher.findById(id);
+    if (!teacher) {
+      const error = new Error("Teacher not found");
+      error.statusCode = 404;
+      throw error;
+    }
     res.status(200).json({ data: teacher, message: "take teacher by id" });
   } catch (error) {
     next(error);
