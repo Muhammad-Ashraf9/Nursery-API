@@ -13,14 +13,14 @@ const {
   teacherBodyIdValidation,
 } = require("../Middlewares/validation/teacherValidations");
 const validator = require("../Middlewares/validation/validator");
-const { isAdmin } = require("../Middlewares/AuthorizationMW");
+const { isAdmin, isAdminOrTeacher } = require("../Middlewares/AuthorizationMW");
 
 const router = express.Router();
 
 router
   .route("/teachers")
   .get(getAllTeachers)
-  .put(isAdmin, teacherUpdateValidation(), validator, updateTeacherData)
+  .put(isAdminOrTeacher, teacherUpdateValidation(), validator, updateTeacherData)
   .delete(isAdmin, teacherBodyIdValidation(), validator, deleteTeacherById);
 
 router.get("/teachers/supervisors", getAllClassSupervisors);
