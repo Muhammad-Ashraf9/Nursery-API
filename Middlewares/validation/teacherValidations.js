@@ -2,14 +2,14 @@ const { body, param, check } = require("express-validator");
 const Teacher = require("../../Model/teacherSchema");
 const { imageValidation } = require("./validator");
 
-exports.teacherParamIdValidation = [
+exports.teacherParamIdValidation = ()=>[
   param("id").isMongoId().withMessage("Invalid teacher id"),
 ];
-exports.teacherBodyIdValidation = [
+exports.teacherBodyIdValidation = ()=>[
   body("id").isMongoId().withMessage("Invalid teacher id"),
 ];
 
-exports.teacherDataValidation = [
+exports.teacherDataValidation = ()=>[
   body("fullname").trim().isString().withMessage("Fullname must be string"),
   body("email")
     .trim()
@@ -45,7 +45,7 @@ exports.teacherDataValidation = [
   // imageValidation,
 ];
 
-exports.teacherUpdateValidation = [
+exports.teacherUpdateValidation =()=> [
   body("id")
     .isMongoId()
     .withMessage("Invalid teacher id")

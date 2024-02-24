@@ -89,7 +89,7 @@ exports.deleteTeacherById = async (req, res, next) => {
       throw error;
     }
     //delete image from uploads folder
-    removeFile(getImageFullPath(deletedTeacher.image.slice(7)));
+    removeFile(getImageFullPath(deletedTeacher.image.slice(7)));//add next param to handle error
     res
       .status(200)
       .json({ deletedTeacher, message: "Teacher deleted successfully" });

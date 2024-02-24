@@ -19,14 +19,14 @@ const router = express.Router();
 router
   .route("/teachers")
   .get(getAllTeachers)
-  .put(teacherUpdateValidation, validator, updateTeacherData)
-  .delete(teacherBodyIdValidation, validator, deleteTeacherById);
+  .put(teacherUpdateValidation(), validator, updateTeacherData)
+  .delete(teacherBodyIdValidation(), validator, deleteTeacherById);
 
 router.get("/teachers/supervisors", getAllClassSupervisors);
 
 router.get(
   "/teachers/:id",
-  teacherParamIdValidation,
+  teacherParamIdValidation(),
   validator,
   getTeacherById
 );

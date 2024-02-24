@@ -39,7 +39,7 @@ server.use(express.urlencoded({ extended: true }));
 server.use(upload.single("image"));
 
 //register teacher
-server.post("/teachers",  teacherDataValidation, validator, addNewTeacher);
+server.post("/teachers",  teacherDataValidation(), validator, addNewTeacher);
 
 //auth MWs
 
