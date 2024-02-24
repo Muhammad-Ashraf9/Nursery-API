@@ -8,14 +8,13 @@ require("dotenv").config();
 const Teacher = require("../Model/teacherSchema");
 const Class = require("../Model/classSchema");
 
-exports.getAllTeachers = (req, res, next) => {
-  Teacher.find()
-    .then((teachers) => {
-      res.status(200).json({ data: teachers, message: "take all teachers" });
-    })
-    .catch((err) => {
-      next(err);
-    });
+exports.getAllTeachers = async (req, res, next) => {
+  try {
+    const teachers = await Teacher.find();
+    res.status(200).json({ data: teachers, message: "Take all teachers" });
+  } catch (error) {
+    next(error);
+  }
 };
 exports.addNewTeacher = async (req, res, next) => {
   const imagePath = req.file.path;
