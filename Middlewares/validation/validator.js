@@ -7,12 +7,7 @@ module.exports = (req, res, next) => {
   let result = validationResult(req);
   if (result.errors.length >= 1) {
     if (req.file) {
-      fs.unlink(
-        path.join(__dirname, "..", "..", "images", req.file.filename),
-        (err) => {
-          if (err) throw err;
-        }
-      );
+      removeFile(getImageFullPath(req.file.filename));
     }
     let errorMessages = result.errors.reduce(
       (current, error) => current + error.msg + " ",

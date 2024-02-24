@@ -8,7 +8,9 @@ const {
   getTeacherById,
 } = require("../Controller/teacherController");
 const {
-  teacherIdValidation,
+  teacherParamIdValidation,
+  teacherUpdateValidation,
+  teacherBodyIdValidation,
 } = require("../Middlewares/validation/teacherValidations");
 const validator = require("../Middlewares/validation/validator");
 
@@ -17,11 +19,16 @@ const router = express.Router();
 router
   .route("/teachers")
   .get(getAllTeachers)
-  .put(updateTeacherData)
-  .delete(deleteTeacherById);
+  .put(teacherUpdateValidation, validator, updateTeacherData)
+  .delete(teacherBodyIdValidation, validator, deleteTeacherById);
 
 router.get("/teachers/supervisors", getAllClassSupervisors);
 
-router.get("/teachers/:id", teacherIdValidation, validator, getTeacherById);
+router.get(
+  "/teachers/:id",
+  teacherParamIdValidation,
+  validator,
+  getTeacherById
+);
 
 module.exports = router;

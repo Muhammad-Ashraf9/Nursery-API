@@ -2,11 +2,13 @@ const fs = require("fs");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 require("dotenv").config();
 
 const Teacher = require("../Model/teacherSchema");
 const Class = require("../Model/classSchema");
+const { removeFile, getImageFullPath } = require("../helper");
 
 exports.getAllTeachers = async (req, res, next) => {
   try {
@@ -22,7 +24,7 @@ exports.addNewTeacher = async (req, res, next) => {
   const imagePath = req.file?.path;
   const { fullname, email, password } = req.body;
   try {
-    const hashedPass = await bcrypt.hash(password, 10);
+    const hashedPass = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
     const teacher = new Teacher({
       fullname,
       email,
@@ -46,19 +48,46 @@ exports.addNewTeacher = async (req, res, next) => {
     next(error);
   }
 };
-exports.updateTeacherData = (req, res, next) => {
-  const id = req.body.id;
-  res.status(201).json({ id, message: "update teacher data" });
+exports.updateTeacherData = async (req, res, next) => {
+  const { id, fullname, email, password } = req.body;
+  const newImagePath = req.file?.path;
+  const oldImagePath = req.teacher.image;
+  console.log("newImagePath :>> ", newImagePath);
+  console.log("oldImagePath :>> ", oldImagePath);
+  const hashedPass = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
+
+  let image;
+  try {
+    if (oldImagePath !== newImagePath) {
+      removeFile(getImageFullPath(oldImagePath.slice(7))); //to remove images from image path
+      image = newImagePath;
+    } else {
+      image = oldImagePath;
+    }
+    const newTeacher = await Teacher.findOneAndUpdate(
+      { _id: id },
+      {
+        fullname,
+        email,
+        password: hashedPass,
+        image,
+      },
+      { new: true }
+    );
+    res.status(201).json({ newTeacher, message: "Teacher added successfully" });
+  } catch (error) {
+    next(error);
+  }
 };
 exports.deleteTeacherById = async (req, res, next) => {
-  const id = req.params.id;
+  const { id } = req.body;
   try {
-    const teacher = await Teacher.findByIdAndDelete(id);
+    const deletedTeacher = await Teacher.findByIdAndDelete(id);
     //delete image from uploads folder
-    fs.unlink(teacher.image, (err) => {
-      if (err) throw err;
-    });
-    res.status(200).json({ teacher, message: "Teacher deleted successfully" });
+    removeFile(getImageFullPath(deletedTeacher.image.slice(7)));
+    res
+      .status(200)
+      .json({ deletedTeacher, message: "Teacher deleted successfully" });
   } catch (error) {
     next(error);
   }
