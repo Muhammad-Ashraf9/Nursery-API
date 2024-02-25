@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const cors = require("cors");
 require("dotenv").config();
 
 const teacherRouter = require("./Routes/teacherRoute");
@@ -29,11 +30,13 @@ mongoose
     console.log(err);
   });
 
-  // serve swagger documentation
+// serve swagger documentation
 swaggerDocs(server, port);
 
-server.use(morgan("combined"));
+// enable cors
+server.use(cors());
 
+server.use(morgan("combined"));
 
 //////////////// parsing requests
 server.use(express.json());
@@ -45,7 +48,7 @@ server.use(upload.single("image"));
 server.use(authRouter);
 
 //authenticate all requests
-// server.use(authMW);
+server.use(authMW);
 
 // serve images statically after authentication
 server.use(express.static("images"));

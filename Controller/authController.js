@@ -10,7 +10,6 @@ exports.login = async (req, res, next) => {
   } else {
     payload = { id: req.teacher._id, role: "teacher" };
   }
-  console.log("payload :>> ", payload);
   const token = jwt.sign(payload, process.env.SECRET_KEY, {
     expiresIn: "1h",
   });
