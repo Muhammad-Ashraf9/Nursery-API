@@ -91,6 +91,20 @@ const mongoose = require("mongoose");
  *           format: binary
  */
 
+//TeacherBodyId
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     TeacherBodyId:
+ *       type: object
+ *       required:
+ *         - id
+ *       properties:
+ *         id:
+ *           type: string
+ *           default: "612a6b3c3e4e8e0015c6e8e5"
+ */
 
 const TeacherSchema = new mongoose.Schema({
   email: {

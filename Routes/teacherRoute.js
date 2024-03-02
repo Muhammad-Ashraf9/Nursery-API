@@ -28,9 +28,15 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Success
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
  *   post:
  *     summary: Add a new teacher
  *     tags: [Teacher]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -38,13 +44,12 @@ const router = express.Router();
  *           schema:
  *             $ref: '#/components/schemas/CreateTeacherSchema'
  *     responses:
- *       200:
- *         description: Success
+ *       201:
+ *         description: Teacher registered successfully
  *         content:
- *          application/json:
- *           schema:
- *            $ref: '#/components/schemas/CreatedTeacherSchema'
- *
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CreatedTeacherSchema'
  *   put:
  *     summary: Update teacher data
  *     tags: [Teacher]
@@ -57,8 +62,12 @@ const router = express.Router();
  *           schema:
  *             $ref: '#/components/schemas/UpdateTeacherDataSchema'
  *     responses:
- *       200:
+ *       201:
  *         description: Success
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
  *   delete:
  *     summary: Delete a teacher
  *     tags: [Teacher]
@@ -73,6 +82,14 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Success
+ *       422:
+ *         description: Validation error
+ *       403:
+ *         description: Forbidden
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Server error
  * /teachers/{id}:
  *   get:
  *     summary: Get teacher by ID
@@ -86,13 +103,27 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Success
+ *     security:
+ *       - bearerAuth: []
  * /teachers/supervisors:
  *   get:
  *     summary: Get all class supervisors
  *     tags: [Teacher]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Success
+ *       403:
+ *         description: Forbidden
+ *       500:
+ *         description: Server error
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 router
   .route("/teachers")
@@ -106,7 +137,6 @@ router
   .delete(isAdmin, teacherBodyIdValidation(), validator, deleteTeacherById);
 
 router.get("/teachers/supervisors", getAllClassSupervisors);
-
 router.get(
   "/teachers/:id",
   teacherParamIdValidation(),

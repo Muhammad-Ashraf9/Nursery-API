@@ -45,6 +45,15 @@ router
    *    - "Children"
    *   summary: "Add new child"
    *   description: "Add new child"
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Success
+   *       403:
+   *         description: Forbidden
+   *       500:
+   *         description: Server error
    *   requestBody:
    *    required: true
    *    content:
@@ -62,13 +71,6 @@ router
    *        - fullname
    *        - age
    *        - classId
-   *   responses:
-   *    201:
-   *     description: "Child added successfully"
-   *    422:
-   *     description: "Validation error"
-   *    500:
-   *     description: "Server error"
    */
   .post(isAdmin, childDataValidation(), validator, addNewChild)
   /**
@@ -79,6 +81,15 @@ router
    *    - "Children"
    *   summary: "Update child data"
    *   description: "Update child data"
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Success
+   *       403:
+   *         description: Forbidden
+   *       500:
+   *         description: Server error
    *   requestBody:
    *    required: true
    *    content:
@@ -99,13 +110,6 @@ router
    *        - fullname
    *        - age
    *        - classId
-   *   responses:
-   *    200:
-   *     description: "Child updated successfully"
-   *    422:
-   *     description: "Validation error"
-   *    500:
-   *     description: "Server error"
    */
   .put(isAdmin, childUpdateValidation(), validator, updateChildData)
   /**
@@ -143,38 +147,44 @@ router
  *  put:
  *   tags:
  *    - "Children"
- *  summary: "Update child data"
- * description: "Update child data"
- * requestBody:
- *  required: true
- *  content:
- *   application/json:
- *    schema:
- *     type: object
- *     properties:
- *      id:
- *       type: string
- *      fullname:
- *       type: string
- *      age:
- *       type: number
- *      classId:
- *       type: string
- *     required:
- *      - id
- *      - fullname
- *      - age
- *      - classId
- * responses:
- *  200:
- *  description: "Child updated successfully"
- * 422:
- * description: "Validation error"
- * 500:
- * description: "Server error"
+ *   summary: "Update child data"
+ *   description: "Update child data"
+ *   requestBody:
+ *    required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       type: object
+ *       properties:
+ *        id:
+ *         type: string
+ *        fullname:
+ *         type: string
+ *        age:
+ *         type: number
+ *        classId:
+ *         type: string
+ *       required:
+ *        - id
+ *        - fullname
+ *        - age
+ *        - classId
+ *   responses:
+ *    200:
+ *     description: "Child updated successfully"
+ *    422:
+ *     description: "Validation error"
+ *    500:
+ *     description: "Server error"
  */
 
-router.get("/child/:id", childParamIdValidation(), validator, getChildById);
+router.put(
+  "/child",
+  isAdmin,
+  childUpdateValidation(),
+  validator,
+  updateChildData
+);
 /**
  * @openapi
  * /child/{id}:

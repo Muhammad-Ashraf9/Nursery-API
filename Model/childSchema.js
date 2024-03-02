@@ -4,7 +4,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 /**
  * @openapi
  * components:
- *   schemas:
+ *    schemas:
  *     AddressSchema:
  *       type: object
  *       properties:
