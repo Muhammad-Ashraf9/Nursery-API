@@ -13,7 +13,7 @@ const {
   teacherBodyIdValidation,
 } = require("../Middlewares/validation/teacherValidations");
 const validator = require("../Middlewares/validation/validator");
-const { isAdmin, isAdminOrTeacher } = require("../Middlewares/AuthorizationMW");
+const { isAdmin, isAdminOrTeacher } = require("../Middlewares/authorizationMW");
 
 const router = express.Router();
 

@@ -14,7 +14,7 @@ const {
   childUpdateValidation,
   childBodyIdValidation,
 } = require("../Middlewares/validation/childValidation");
-const { isAdmin } = require("../Middlewares/AuthorizationMW");
+const { isAdmin } = require("../Middlewares/authorizationMW");
 
 const router = express.Router();
 
